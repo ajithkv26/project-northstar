@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Build and checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build and check
+        uses: ./.github/actions/check
+
+      - name: Upload built site
+        id: site
+        uses: actions/upload-artifact@v7
+        with:
+          name: site-preview
+          path: dist
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload single-file preview
+        id: page
+        uses: actions/upload-artifact@v7
+        with:
+          path: preview/northstar-preview.html
+          archive: false
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Explain the preview
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
+          ## Preview
+
+          Download [northstar-preview.html](${{ steps.page.outputs.artifact-url }}) and open it in a browser. The CSS is included in that file.
+
+          [site-preview](${{ steps.site.outputs.artifact-url }}) is the \`dist/\` directory GitHub Pages publishes from \`main\`.
+
+          On a machine with the repo: \`npm run preview\`.
+
+          This pull request does not get a hosted URL. Pages publishes \`main\` at https://ajithkv26.github.io/project-northstar/ after Pages is set to GitHub Actions.
+          EOF

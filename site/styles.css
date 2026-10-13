@@ -1,0 +1,19 @@
+/*
+ * Uses token slots only. Heading sizes stay with the user agent
+ * until a ratio-based type scale exists.
+ */
+
+body {
+  margin: var(--space-page);
+  background-color: var(--color-surface);
+  color: var(--color-foreground);
+  font-family: var(--font-family);
+  font-size: var(--type-body);
+  line-height: var(--type-leading);
+}
+
+main {
+  display: grid;
+  grid-template-columns: var(--grid-template-columns);
+  column-gap: var(--grid-gutter);
+}

@@ -1,0 +1,22 @@
+{
+  "name": "project-northstar",
+  "private": true,
+  "description": "Ajith Kumar's product design portfolio.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "pack-preview": "node scripts/pack-preview.mjs",
+    "preview": "npm run build && node scripts/preview.mjs",
+    "check:html": "node scripts/check-html.mjs",
+    "check:a11y": "node scripts/check-a11y.mjs",
+    "check:budget": "node scripts/check-budget.mjs",
+    "check": "npm run build && npm run pack-preview && npm run check:html && npm run check:a11y && npm run check:budget"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "vnu-jar": "^26.10.9"
+  }
+}
