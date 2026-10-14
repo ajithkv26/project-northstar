@@ -1,0 +1,10 @@
+{
+  "transfer": "Uncompressed bytes of the HTML document plus same-origin subresources. Gzip is not applied. An external URL fails the check.",
+  "pages": [
+    {
+      "name": "homepage",
+      "entry": "dist/index.html",
+      "maxTransferBytes": 204800
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+/*
+ * Structural placeholders only.
+ * Pending Foundations decisions: docs/02-FOUNDATIONS.md.
+ * Type scale and page grid will be ratio-based. Neither is chosen here.
+ * Values are stand-ins so the page can build. They are not design decisions.
+ *
+ * Exception: the font stack is a Sprint 0 constraint (system fonts, no web fonts).
+ */
+
+:root {
+  /* Pending: contrast-checked color roles for light and dark.
+     System colors follow the operating system until that measurement exists. */
+  --color-surface: Canvas;
+  --color-foreground: CanvasText;
+  --color-border: GrayText; /* Slot only. Not applied. A border would be decoration. */
+
+  /* Sprint 0 constraint. Not a typeface choice. */
+  --font-family: ui-sans-serif, system-ui, sans-serif;
+
+  /* Pending: ratio-based type scale. 1rem and normal are user-agent defaults. */
+  --type-body: 1rem;
+  --type-leading: normal;
+
+  /* Pending: spacing scale. One inset, not a scale. */
+  --space-unit: 1rem;
+  --space-page: var(--space-unit);
+
+  /* Pending: ratio-based page grid. One column until then. */
+  --grid-template-columns: minmax(0, 1fr);
+  --grid-gutter: var(--space-unit);
+}
