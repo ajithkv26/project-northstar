@@ -1,6 +1,6 @@
 /*
  * Homepage layout. Colour, type, space, and the grid come from tokens.css.
- * The 1px outline is the hairline in foundations DD-013. Thickness is not a token.
+ * The 1px line is the hairline in foundations DD-013. Thickness is not a token.
  */
 
 *,
@@ -20,7 +20,6 @@ body {
   column-gap: var(--north-space-stack);
   max-width: calc(var(--north-measure) + 2 * var(--north-space-stack));
   margin: 0 auto;
-  padding-block: var(--north-space-section);
   padding-inline: var(--north-space-stack);
   background: var(--north-surface);
   color: var(--north-foreground);
@@ -33,49 +32,112 @@ body {
 
 body > * {
   grid-column: 1 / -1;
+  min-width: 0;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--north-space-stack);
+  padding-block: var(--north-space-tight);
+  background: var(--north-surface);
+  border-bottom: 1px solid var(--north-border); /* break: DD-013 */
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--north-space-stack);
+}
+
+a {
+  color: var(--north-foreground);
 }
 
 h1,
-h2 {
-  margin: 0 0 var(--north-space-tight);
+h2,
+h3,
+.statement,
+.question,
+blockquote {
+  margin: 0;
   font-family: var(--north-font);
   font-weight: 400; /* break: DD-001 */
   line-height: var(--north-leading);
   text-wrap: balance;
 }
 
-h1 {
+h1,
+.statement,
+blockquote {
   font-size: var(--north-size-title);
 }
 
-h2 {
+h2,
+.question {
   font-size: var(--north-size-heading);
 }
 
+h3 {
+  font-size: var(--north-size-body);
+}
+
 p,
-ol {
+ul,
+blockquote {
   margin: 0;
 }
 
+h1,
+h2,
+h3,
+.question,
 p + p,
 li + li {
   margin-top: var(--north-space-stack);
 }
 
-ol {
-  padding-inline-start: var(--north-space-section);
+section + section,
+footer {
+  margin-top: var(--north-space-section);
 }
 
 main {
-  margin-top: var(--north-space-section);
+  padding-block: var(--north-space-section);
 }
 
-section + section {
+footer {
+  padding-bottom: var(--north-space-section);
+}
+
+article {
   margin-top: var(--north-space-section);
+  padding-top: var(--north-space-stack);
+  border-top: 1px solid var(--north-border); /* break: DD-013 */
+}
+
+ul {
+  padding-inline-start: var(--north-space-section);
+}
+
+blockquote {
+  margin-top: var(--north-space-section);
+  padding-inline-start: var(--north-space-stack);
+  border-inline-start: 1px solid var(--north-border); /* break: DD-013 */
 }
 
 p,
-li {
+li,
+h1,
+h2,
+h3,
+blockquote {
+  overflow-wrap: break-word;
   hyphens: auto;
 }
 
