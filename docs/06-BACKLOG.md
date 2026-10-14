@@ -9,3 +9,4 @@ Items that haven't yet shown which part of the build filter they serve.
 | Spacing scale beyond the single page inset | understand | Shipped in foundations. Homepage uses the tokens. |
 | The three homepage asks | understand | On the page as visible marks. Waiting on Ajith's words. |
 | Per-PR preview URL | maintain | Not scheduled. Connect one host in DD-002. No Actions secret. |
+| Vale prose check | maintain | Shipped. Docs fail the job. Story copy warns. |

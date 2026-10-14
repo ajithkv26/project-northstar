@@ -13,6 +13,7 @@
     "check:html": "node scripts/check-html.mjs",
     "check:a11y": "node scripts/check-a11y.mjs",
     "check:budget": "node scripts/check-budget.mjs",
+    "check:prose": "node scripts/check-prose.mjs",
     "check": "npm run build && npm run pack-preview && npm run check:html && npm run check:a11y && npm run check:budget"
   },
   "devDependencies": {
