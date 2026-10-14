@@ -1,14 +1,24 @@
 # Design decisions
 
-Sprint 0 for Project Northstar. `tokens.css` is the source of truth. There is no Figma file.
+Sprint 0 is for Project Northstar.
+`tokens.css` is the source of truth.
+This project does not use a Figma file.
 
-The repository had no placeholder tokens. Every custom property in this log was introduced here, from scratch.
+The repository had no placeholder tokens.
+This log introduces every token from scratch.
 
-The set is independent of the REMA design system. Token names, the typeface, and the colours are Northstar's own.
+The set is independent of the REMA design system.
+The token names belong to Northstar.
+The typeface belongs to Northstar.
+The colours belong to Northstar.
 
-Each entry names the part of the build filter it serves: **easier to understand**, **easier to maintain**, or **more memorable**.
+Each entry names one part of the build filter.
+The parts are **easier to understand**, **easier to maintain**, and **more memorable**.
 
-A token is in the file because at least two places use it, or because it records a decision the rest of the system hangs on. The set stops at type, space, the three colour roles, and the page grid.
+A token is in the file for one of two reasons.
+At least two places use the token.
+Or the token records a decision that the other tokens depend on.
+The set stops at type, space, the three colour roles, and the page grid.
 
 ## Index
 
@@ -32,7 +42,14 @@ A token is in the file because at least two places use it, or because it records
 
 ## Contrast method
 
-Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are linearised, luminance is `0.2126 R + 0.7152 G + 0.0722 B`, and the ratio is `(L lighter + 0.05) / (L darker + 0.05)`. Figures below are rounded to two decimal places from that result. AA for this sprint means 4.5:1 for normal text and 3:1 for a border that marks structure (success criterion 1.4.11).
+Ratios use the WCAG 2.1 relative luminance definition.
+The method makes each sRGB channel linear.
+Luminance is `0.2126 R + 0.7152 G + 0.0722 B`.
+The ratio is `(L lighter + 0.05) / (L darker + 0.05)`.
+The figures below use two decimal places.
+AA for this sprint is 4.5:1 for normal text.
+AA for a border that marks structure is 3:1.
+That border rule is success criterion 1.4.11.
 
 ## DD-001
 
@@ -40,17 +57,49 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** more memorable
 
-**Decision:** One typeface, Source Serif 4 roman, self-hosted at `fonts/SourceSerif4-Regular.woff2` under the SIL Open Font License (`fonts/LICENSE.md`). The file is the unmodified regular cut from the Adobe release. Weight 400 only. The stack falls back through Iowan Old Style, Palatino, Palatino Linotype, and Book Antiqua, then a generic serif. `font-display: swap` so text is readable before the file arrives.
+**Decision:** The system uses one typeface.
+The typeface is Source Serif 4 roman.
+The site hosts `fonts/SourceSerif4-Regular.woff2`.
+The license is the SIL Open Font License.
+The license file is `fonts/LICENSE.md`.
+The file is the regular cut from the Adobe release.
+The project does not modify that file.
+The weight is 400 only.
+The fallback list is Iowan Old Style, Palatino, Palatino Linotype, and Book Antiqua.
+The last fallback is a generic serif.
+`font-display: swap` shows text before the font file arrives.
 
-**Rationale:** The portfolio is typography-led. Ajith trained in mathematics and started in graphic design, so the page should read like a considered text, with one voice from the label to the title. Source Serif 4 is drawn for continuous reading and can be hosted with the site. One weight keeps hierarchy on the ratio. Weight is not a token: a single roman does not need a scale.
+**Rationale:** The portfolio is typography-led.
+Ajith trained in mathematics.
+Ajith started in graphic design.
+The page reads as careful text.
+One voice runs from the label to the title.
+Source Serif 4 supports continuous text.
+The site can host this typeface.
+One weight puts the hierarchy on the ratio.
+Weight is not a token.
+One roman cut does not need a weight scale.
 
 **Alternatives considered:**
 
-- A system stack alone. The voice and the `ch` measure would change with the operating system.
-- A grotesque or `system-ui`. That reads as a product template.
-- Two families, a display serif plus a sans for text. A pairing is the usual portfolio template.
-- Newsreader, Inter, JetBrains Mono, or Georgia. Those faces are tied to other systems, including REMA. They are not used here, including as fallbacks.
-- A variable optical-size axis. One drawing at every step keeps the ratio as the only change in Sprint 0.
+- An alternative was a system stack alone.
+  The voice changes with the operating system.
+  The `ch` measure changes with the operating system.
+- An alternative was a grotesque.
+  An alternative was `system-ui`.
+  Those choices look like a product template.
+- An alternative was two families.
+  One family is a display serif.
+  The other family is a sans for text.
+  That pair is the usual portfolio template.
+- Newsreader, Inter, JetBrains Mono, and Georgia were alternatives.
+  Other systems use those typefaces.
+  REMA uses those typefaces.
+  This system does not use them.
+  This system does not use them as fallbacks.
+- An alternative was a variable optical-size axis.
+  Sprint 0 uses the same letter shapes at every step.
+  The ratio is the only change in Sprint 0.
 
 ## DD-002
 
@@ -58,15 +107,34 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** more memorable
 
-**Decision:** The scale ratio is √2, written as `1.414213562`. Note, heading, and title are powers of this number from the body step.
+**Decision:** The scale ratio is √2.
+The decimal form is `1.414213562`.
+The note, the heading, and the title are powers of this ratio.
+Each power starts from the body step.
 
-**Rationale:** √2 is the ISO paper ratio. Two steps multiply to 2, so the title is double the body (36px from an 18px body at a 16px root). It is a ratio a graphic designer already uses for paper, and a ratio a mathematics graduate already knows as the diagonal of a unit square. One custom property keeps every derived step attached to that choice.
+**Rationale:** √2 is the ISO paper ratio.
+Two steps multiply to 2.
+The title is double the body.
+An 18px body at a 16px root gives a 36px title.
+A graphic designer uses this ratio for paper.
+A mathematics graduate knows this ratio.
+The ratio is the diagonal of a unit square.
+One token keeps each derived step on this ratio.
 
 **Alternatives considered:**
 
-- 1.25 and 1.333. Both are common UI-kit ratios, and neither doubles on the second step.
-- 1.618. The golden ratio is a familiar template, and the note step would fall near 11px while the title would jump past 47px. That is a poor phone range.
-- Unrelated hand-tuned sizes. They would be harder to keep intact.
+- 1.25 was an alternative.
+  1.333 was an alternative.
+  UI kits use these ratios often.
+  The second step of these ratios is not double the base.
+- 1.618 was an alternative.
+  1.618 is the golden ratio.
+  The golden ratio is a familiar template.
+  The note step is near 11px with this ratio.
+  The title step is past 47px with this ratio.
+  That range is poor on a phone.
+- Hand-tuned sizes with no shared ratio were an alternative.
+  Those sizes are harder to keep intact.
 
 ## DD-003
 
@@ -74,15 +142,32 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to understand
 
-**Decision:** The base step is `1.125rem`. At a 16px root that is 18px. Paragraphs use it. The stack space aliases it. The other sizes are this value divided or multiplied by the ratio.
+**Decision:** The base step is `1.125rem`.
+A 16px root makes this step 18px.
+Paragraphs use this step.
+The stack space uses this same value.
+The other sizes divide this value by the ratio.
+The other sizes multiply this value by the ratio.
 
-**Rationale:** One reference size is the number the rest of the system is explained from. 18px is a comfortable reading size on a phone. Because it is `rem`, a reader who changes the browser's default font size changes the whole scale with it.
+**Rationale:** One reference size explains the other sizes.
+18px is a comfortable text size on a phone.
+The unit is `rem`.
+A reader can change the default font size in the browser.
+That change changes the full scale.
 
 **Alternatives considered:**
 
-- 16px. That is the browser default, so it would not record a decision.
-- 17px. That is another system's body size. It is not used.
-- 20px. The title would become 40px and the note about 14px. Usable, and heavier on a 320px screen than this portfolio needs.
+- 16px was an alternative.
+  16px is the browser default.
+  16px does not record a decision.
+- 17px was an alternative.
+  17px is the body size of another system.
+  This system does not use 17px.
+- 20px was an alternative.
+  A 20px body makes the title 40px.
+  A 20px body makes the note about 14px.
+  20px is usable.
+  20px is heavier on a 320px screen than this portfolio needs.
 
 ## DD-004
 
@@ -90,14 +175,28 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to maintain
 
-**Decision:** One step down, `body / ratio`, 12.73px at a 16px root. Used for the short label above the name and the colophon. The tight space aliases this step.
+**Decision:** The note size is one step down from the body.
+The formula is `body / ratio`.
+A 16px root makes this step 12.73px.
+The short label above the name uses this step.
+The colophon uses this step.
+The tight space uses this same value.
 
-**Rationale:** The value is a `calc()` of the body and the ratio, so it cannot drift off the scale. It is only for short labels. Paragraphs stay on the body step. The foreground contrast on this size is the same AAA pair as the body (DD-012), which is what makes a 12.73px label acceptable.
+**Rationale:** The value is a `calc()` of the body and the ratio.
+The note size stays on the scale.
+The note size is for short labels only.
+Paragraphs stay on the body step.
+This size uses the same AAA pair as the body.
+DD-012 records that pair.
+That contrast makes a 12.73px label acceptable.
 
 **Alternatives considered:**
 
-- A fixed 14px. That would leave the ratio.
-- Two steps down, about 9px. That would fail the phone reading test.
+- A fixed 14px was an alternative.
+  A fixed 14px leaves the ratio.
+- Two steps down was an alternative.
+  Two steps down is about 9px.
+  About 9px fails the test on a phone.
 
 ## DD-005
 
@@ -105,14 +204,27 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to maintain
 
-**Decision:** One step up, `body * ratio`, 25.46px at a 16px root. Section headings use it. The title step multiplies it by the ratio again.
+**Decision:** The heading size is one step up from the body.
+The formula is `body * ratio`.
+A 16px root makes this step 25.46px.
+Section headings use this step.
+The title step multiplies this step by the ratio.
 
-**Rationale:** Deriving the heading from the body and the ratio means a later change to either value retunes the heading. The size is fixed, not fluid, so the ratio stays visible when you measure the page.
+**Rationale:** The heading comes from the body and the ratio.
+A later change to the body changes the heading.
+A later change to the ratio changes the heading.
+The heading size stays constant.
+The size is not fluid.
+You can measure the ratio on the page.
 
 **Alternatives considered:**
 
-- A `clamp()` between two sizes. Fluid type would hide the ratio and make the phone test harder to judge.
-- The title size reused for sections. Sections and the page title would share a step, and the scale would lose the middle.
+- A `clamp()` between two sizes was an alternative.
+  Fluid type hides the ratio.
+  Fluid type makes the phone test harder to judge.
+- The title size for sections was an alternative.
+  Sections and the page title share one step in that plan.
+  The scale loses the middle step.
 
 ## DD-006
 
@@ -120,14 +232,29 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to maintain
 
-**Decision:** Two steps up, `heading * ratio`, which is twice the body: 36px at a 16px root. The page title uses it. The section space aliases it.
+**Decision:** The title size is two steps up from the body.
+The formula is `heading * ratio`.
+This size is twice the body.
+A 16px root makes this step 36px.
+The page title uses this step.
+The section space uses this same value.
 
-**Rationale:** The title is the loudest size in the system, and it is still a text size, not a poster size. Twice the body is the √2 identity, so the top of the scale is explainable in one sentence. The section space reuses this step, so the token is both a type size and the large interval.
+**Rationale:** The title is the loudest size in the system.
+The title is still a text size.
+The title is not a poster size.
+Twice the body is the √2 identity.
+You can explain the top of the scale in one sentence.
+The section space uses this same step.
+The token is a type size.
+The token is also the large interval.
 
 **Alternatives considered:**
 
-- Three steps up, about 50.9px. That starts to behave like a marketing hero on a phone.
-- A separate display face at this size. That would break the one-typeface decision.
+- Three steps up was an alternative.
+  Three steps up is about 50.9px.
+  That size looks like a marketing hero on a phone.
+- A separate display typeface was an alternative.
+  A second typeface breaks the one-typeface decision.
 
 ## DD-007
 
@@ -135,15 +262,35 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to understand
 
-**Decision:** Line height is `1.5`, unitless, on body and title. Headings inherit it.
+**Decision:** The line height is `1.5`.
+The value has no unit.
+Body text uses this line height.
+The title uses this line height.
+Headings get this line height from the parent.
 
-**Rationale:** 1.5 is the line spacing WCAG 2.1 success criterion 1.4.8 asks for. This sprint promises AA, and the reading column still uses that spacing so lines are easy to follow. One leading is easier to remember than a leading per role. A unitless value scales with the font size and survives a reader stylesheet that increases spacing.
+**Rationale:** WCAG 2.1 success criterion 1.4.8 asks for a line height of 1.5.
+This sprint meets AA.
+The text column still uses this line height.
+A reader can follow the lines.
+One line height is easier to remember than a line height for each role.
+A value with no unit grows with the font size.
+A reader style sheet can increase the spacing.
+The line height still works after that increase.
 
 **Alternatives considered:**
 
-- Leading equal to the ratio, 1.414. That sits under the 1.5 benchmark. The ratio still drives size and space. Leading is the one place it does not.
-- A tighter title leading such as 1.15. That would add a second token for a single role.
-- 1.75. Loose under a 36px title, and it is another system's prose leading.
+- A line height equal to the ratio was an alternative.
+  That value is 1.414.
+  1.414 is below the 1.5 benchmark.
+  The ratio still controls size.
+  The ratio still controls space.
+  The ratio does not control line height.
+- A tighter title line height was an alternative.
+  That value is 1.15.
+  That choice adds a second token for one role.
+- 1.75 was an alternative.
+  1.75 is loose under a 36px title.
+  1.75 is the prose line height of another system.
 
 ## DD-008
 
@@ -151,14 +298,23 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to maintain
 
-**Decision:** The small interval aliases `--north-size-note`. Under headings, and as the padding between text and a rule.
+**Decision:** The small space uses the value of `--north-size-note`.
+This space sits under headings.
+This space is the padding between text and a rule.
 
-**Rationale:** Space steps are the type steps. Aliasing the note size means the small interval cannot be edited away from the small type. The name says it is space, so a margin is not written with a font-size token.
+**Rationale:** The space steps are the type steps.
+The small space stays equal to the small type.
+You do not edit the two values apart.
+The token name says that the value is space.
+A margin does not use a font-size token.
 
 **Alternatives considered:**
 
-- An 8px or 4px inset from a different grid. That would start a second rhythm.
-- Reusing the stack space under headings. The heading would detach from the paragraph it introduces.
+- An 8px inset from a different grid was an alternative.
+  A 4px inset from a different grid was an alternative.
+  That inset starts a second rhythm.
+- The stack space under headings was an alternative.
+  The heading separates from the paragraph that follows.
 
 ## DD-009
 
@@ -166,14 +322,25 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to understand
 
-**Decision:** The everyday interval aliases `--north-size-body`. Paragraph gaps, the page inset, and the grid gutter all use it.
+**Decision:** The stack space uses the value of `--north-size-body`.
+Paragraph gaps use this space.
+The page inset uses this space.
+The grid gutter uses this space.
 
-**Rationale:** The body step is the interval people already understand, because it is the type size they are reading. One inset of one body em is a simple page margin. Using the same token for the gutter keeps the grid on that interval.
+**Rationale:** The stack space is the everyday interval.
+The body step is the interval that a reader already knows.
+The interval matches the text size on the page.
+One inset of one body em is the page margin.
+The same token for the gutter keeps the grid on this interval.
 
 **Alternatives considered:**
 
-- A separate inset token and a separate gutter token with the same value. They would be duplicates until a real second value exists.
-- 16px. It would break the shared step.
+- A separate inset token was an alternative.
+  A separate gutter token was an alternative.
+  The two tokens have the same value.
+  The two tokens are duplicates until a second value exists.
+- 16px was an alternative.
+  16px breaks the shared step.
 
 ## DD-010
 
@@ -181,14 +348,23 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to maintain
 
-**Decision:** The large interval aliases `--north-size-title`. Between sections, and as the page's block padding.
+**Decision:** The section space uses the value of `--north-size-title`.
+This space sits between sections.
+This space is the block padding of the page.
 
-**Rationale:** The large step is how a section announces itself. Aliasing the title size ties that announcement to the type scale. A change to the title step retunes the section gap.
+**Rationale:** The large step shows the start of a section.
+The section space stays equal to the title size.
+The section gap follows the type scale.
+A change to the title step changes the section gap.
 
 **Alternatives considered:**
 
-- A blank line, `leading * body` (27px at a 16px root), as its own number. That number is not on the √2 scale.
-- The stack space between sections. Sections would not separate clearly from paragraphs.
+- A blank line as its own number was an alternative.
+  The formula is `leading * body`.
+  A 16px root makes that line 27px.
+  27px is not on the √2 scale.
+- The stack space between sections was an alternative.
+  Sections do not separate clearly from paragraphs in that plan.
 
 ## DD-011
 
@@ -196,15 +372,38 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to understand
 
-**Decision:** The page ground. Light `#E6F0F1`. Dark `#1A3C44`, applied under `prefers-color-scheme: dark`. `color-scheme` is set with the surface so browser chrome matches the ground. Light is the default, including when the visitor has expressed no preference.
+**Decision:** This token is the page surface.
+The light value is `#E6F0F1`.
+The dark value is `#1A3C44`.
+The query `prefers-color-scheme: dark` applies the dark value.
+The project sets `color-scheme` with the surface.
+The browser chrome matches the surface.
+Light is the default.
+Light stays the default when a visitor sets no preference.
 
-**Rationale:** The role name says where the colour goes. Light is a pale mineral sheet. Dark is a lifted marine, bluer and lighter than the light-theme ink, so the dark ground is its own value rather than the light ink reused as a background. Neither value is pure white or pure black.
+**Rationale:** The role name tells you where the colour goes.
+The light surface is a pale mineral sheet.
+The dark surface is a lifted marine.
+The dark surface is bluer than the light-theme foreground.
+The dark surface is lighter than the light-theme foreground.
+The dark surface has its own value.
+The dark surface is not the light foreground as a background.
+The light value is not pure white.
+The light value is not pure black.
+The dark value is not pure white.
+The dark value is not pure black.
 
 **Alternatives considered:**
 
-- `#FFFFFF` and `#000000`. They glare, and they do not record a choice.
-- A warm cream ground. Warm paper is a common editorial palette, and it is close to palettes this system is required to avoid.
-- One hex shared by both themes. Dark mode needs its own ground.
+- `#FFFFFF` and `#000000` were alternatives.
+  Those colours glare.
+  Those colours do not record a choice.
+- A warm cream surface was an alternative.
+  Warm paper is a common editorial palette.
+  That palette is close to palettes that this system must avoid.
+  This system must stay away from those palettes.
+- One hex for both themes was an alternative.
+  Dark mode needs its own surface.
 
 ## DD-012
 
@@ -212,7 +411,10 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 
 **Build filter:** easier to understand
 
-**Decision:** All text, including the note labels. Light `#0E2428` on `#E6F0F1`. Dark `#D7EBEC` on `#1A3C44`.
+**Decision:** This token colours all text.
+Note labels use this token.
+The light foreground `#0E2428` sits on `#E6F0F1`.
+The dark foreground `#D7EBEC` sits on `#1A3C44`.
 
 **Measured ratios:**
 
@@ -221,14 +423,27 @@ Ratios use the WCAG 2.1 relative luminance definition. sRGB channels are lineari
 | Light | 0.0151 | 0.8549 | **13.90:1** |
 | Dark | 0.7992 | 0.0387 | **9.58:1** |
 
-Both clear WCAG 2.1 AA for normal text (4.5:1) and AAA (7:1).
+Both pairs pass WCAG 2.1 AA for normal text.
+The AA limit is 4.5:1.
+Both pairs pass AAA.
+The AAA limit is 7:1.
 
-**Rationale:** One ink keeps the set small and keeps the note size on the same contrast pair as the body. Hierarchy is size, which is already a token. The role name tells an author to use it for text and not for rules.
+**Rationale:** One foreground keeps the set small.
+The note size uses the same contrast pair as the body.
+Size shows the hierarchy.
+Size is already a token.
+The role name tells an author to use this colour for text.
+An author does not use this colour for rules.
 
 **Alternatives considered:**
 
-- A second, muted foreground for labels. Muted greys are where text contrast usually fails, and the label would no longer match the body ink.
-- An accent colour for links. This sprint has no component colours, and the specimen has no links.
+- A second foreground for labels was an alternative.
+  That plan uses a muted grey.
+  Muted greys are where text contrast usually fails.
+  The label does not match the body foreground in that plan.
+- An accent colour for links was an alternative.
+  This sprint has no component colours.
+  The specimen has no links.
 
 ## DD-013
 
@@ -236,7 +451,14 @@ Both clear WCAG 2.1 AA for normal text (4.5:1) and AAA (7:1).
 
 **Build filter:** easier to understand
 
-**Decision:** Structural rules. Light `#758384` on `#E6F0F1`. Dark `#798D93` on `#1A3C44`. The specimen uses the role for the header rule and the footer rule. Rule thickness is 1px and is not a token, because a second thickness is not used.
+**Decision:** This token colours structural rules.
+The light border `#758384` sits on `#E6F0F1`.
+The dark border `#798D93` sits on `#1A3C44`.
+The specimen uses this role for the header rule.
+The specimen uses this role for the footer rule.
+The rule thickness is 1px.
+Thickness is not a token.
+The system does not use a second thickness.
 
 **Measured ratios:**
 
@@ -245,14 +467,25 @@ Both clear WCAG 2.1 AA for normal text (4.5:1) and AAA (7:1).
 | Light | 0.2168 | 0.8549 | **3.39:1** |
 | Dark | 0.2522 | 0.0387 | **3.41:1** |
 
-Both clear WCAG 2.1 AA for non-text contrast (success criterion 1.4.11, 3:1).
+Both pairs pass WCAG 2.1 AA for non-text contrast.
+The rule is success criterion 1.4.11.
+The limit is 3:1.
 
-**Rationale:** The border is a role, separate from the ink, so a rule can be quieter than the text and still meet the non-text bar. A pale hairline on these surfaces would fall under 3:1, so the value is a mid mineral rather than a tint of the ground.
+**Rationale:** The border is its own role.
+The border is separate from the foreground.
+A rule can be quieter than the text.
+The rule still meets the non-text contrast limit.
+A pale hairline on these surfaces is under 3:1.
+The value is a mid mineral.
+The value is not a tint of the surface.
 
 **Alternatives considered:**
 
-- A hairline near 1.5:1. It would fail AA.
-- Reusing the foreground for rules. The role would collapse, and a full-ink rule is heavier than the page needs.
+- A hairline near 1.5:1 was an alternative.
+  That hairline fails AA.
+- The foreground for rules was an alternative.
+  The border role collapses into the foreground in that plan.
+  A full-ink rule is heavier than the page needs.
 
 ## DD-014
 
@@ -260,16 +493,35 @@ Both clear WCAG 2.1 AA for non-text contrast (success criterion 1.4.11, 3:1).
 
 **Build filter:** easier to understand
 
-**Decision:** The text column stops at `60ch`. The specimen's shell is this width plus two stack insets, so the line itself is the measure. Below that width, the column is the viewport minus the inset.
+**Decision:** The text column stops at `60ch`.
+The specimen shell adds two stack insets to this width.
+The text line itself is the measure.
+Below that width, the column is the viewport minus the inset.
 
-**Rationale:** `ch` follows the zero of Source Serif 4, so the line length stays attached to the typeface. In this roman, a full line of the specimen at 60ch runs about 66 to 70 letters. The zero is wider than an average letter, so the cap is 60 zeros in order to land near 66 letters of prose, the length the column is aimed at. The token records a reading measure, which a pixel width would not say.
+**Rationale:** `ch` follows the zero of Source Serif 4.
+The line length stays with this typeface.
+In this roman, a full line at 60ch has about 66 to 70 letters.
+The zero is wider than an average letter.
+The limit is 60 zeros.
+This limit puts the line near 66 letters of prose.
+66 letters is the target length of the column.
+The token records a text measure.
+A pixel width does not record that measure.
 
 **Alternatives considered:**
 
-- 66ch. Measured on this face, that cap sets prose near 75 letters, which is the long end of comfort.
-- A `rem` cap tuned by eye to a different face. It would not follow Source Serif 4.
-- A pixel max-width. It ignores the font, and it fights a reader who enlarges the root size.
-- 45ch. That is what a phone already does by being narrow, and it would cap desktop lines too early.
+- 66ch was an alternative.
+  On this typeface, 66ch sets the text near 75 letters.
+  75 letters is the long end of comfort.
+- A `rem` limit for a different typeface was an alternative.
+  An author sets that limit by eye.
+  That limit does not follow Source Serif 4.
+- A pixel maximum width was an alternative.
+  A pixel width ignores the typeface.
+  A pixel width fights a reader who makes the root size larger.
+- 45ch was an alternative.
+  A narrow phone already gives that line length.
+  45ch limits desktop lines too early.
 
 ## DD-015
 
@@ -277,20 +529,53 @@ Both clear WCAG 2.1 AA for non-text contrast (success criterion 1.4.11, 3:1).
 
 **Build filter:** more memorable
 
-**Decision:** The page grid has 4 columns. The gutter is `--north-space-stack` and is not a separate token. Running text spans all four columns. The specimen sets that grid on the page.
+**Decision:** The page grid has 4 columns.
+The gutter is `--north-space-stack`.
+The gutter is not a separate token.
+Text spans all four columns.
+The specimen sets this grid on the page.
 
-**Rationale:** Four is the smallest even grid that can later hold a figure on two columns and a caption on two. It is a memorable count, and it avoids a 12-column marketing grid. The gutter reuses the stack space so the grid does not invent an interval.
+**Rationale:** Four is the smallest even grid for a later figure.
+The figure can use two columns.
+The caption can use two columns.
+Four is a memorable count.
+The grid is not a 12-column marketing grid.
+The gutter uses the stack space again.
+The grid does not add a new interval.
 
 **Alternatives considered:**
 
-- 12 columns. That is a template grid this portfolio does not need yet.
-- No column token, only a single centered column. Later case studies would invent a grid beside the type scale.
-- A separate gutter token equal to the stack space. It would duplicate DD-009.
+- 12 columns was an alternative.
+  A 12-column grid is a template.
+  This portfolio does not need that grid yet.
+- No column token was an alternative.
+  The page has one centered column in that plan.
+  Later case studies add a grid beside the type scale.
+- A separate gutter token was an alternative.
+  That token equals the stack space.
+  That token duplicates DD-009.
 
 ## Backlog
 
-These are notes for later. They are not tokens, and they are not implemented.
+These notes are for later work.
+These notes are not tokens.
+This sprint does not build these notes.
 
-**Documented breaks.** A stricter pass could require every raw value in page CSS to be a token, with a deliberate exception written as a comment in the form `/* break: DD-xxx */`. The comment would name the decision being broken, so an exception stays attached to a reason. Sprint 0 does not add that lint, and the specimen does not use the comment.
+**Documented breaks.** A later strict pass can make this rule.
+Each raw value in page CSS must be a token.
+A writer can record an exception in a comment.
+The comment form is `/* break: DD-xxx */`.
+The comment names the decision that the exception breaks.
+The exception stays attached to a reason.
+Sprint 0 does not add that lint.
+The specimen does not use the comment.
 
-**What I'd have built.** A later case study could show what shipped and, in a quieter voice beside it, what the designer would have built. Sprint 0 does not define a layout, a token, or any specimen content for that treatment.
+**What I'd have built.**
+
+A later case study can show the work that shipped.
+The case study can also show the design that the designer did not ship.
+The second part uses a quieter voice.
+That voice sits beside the shipped work.
+Sprint 0 does not define a layout for that treatment.
+Sprint 0 does not define a token for that treatment.
+Sprint 0 does not define specimen content for that treatment.
