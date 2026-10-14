@@ -14,7 +14,12 @@ if (!existsSync(join(dist, 'index.html'))) {
   process.exit(1);
 }
 
-const targets = [dist];
+// Documents only. dist/ also contains the font file, which the checker cannot parse.
+const targets = [
+  join(dist, 'index.html'),
+  join(dist, 'styles.css'),
+  join(dist, 'tokens.css'),
+];
 if (existsSync(preview)) targets.push(preview);
 
 const result = spawnSync('java', [

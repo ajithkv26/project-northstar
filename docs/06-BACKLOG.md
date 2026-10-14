@@ -4,7 +4,8 @@ Items that haven't yet shown which part of the build filter they serve.
 
 | Idea | Filter it might serve | Status |
 |---|---|---|
-| Ratio-based type scale and page grid | understand | Pending Foundations. Slots only in `site/tokens.css`. |
-| Color roles with measured contrast, light and dark | understand | Pending Foundations. The scaffold uses system colors. |
-| Spacing scale beyond the single page inset | understand | Pending Foundations. |
+| Ratio-based type scale and page grid | understand | Shipped in foundations. Homepage uses the tokens. |
+| Color roles with measured contrast, light and dark | understand | Shipped in foundations. Homepage uses the tokens. |
+| Spacing scale beyond the single page inset | understand | Shipped in foundations. Homepage uses the tokens. |
+| The three homepage asks | understand | On the page as visible marks. Waiting on Ajith's words. |
 | Per-PR preview URL | maintain | Not scheduled. Connect one host in DD-002. No Actions secret. |

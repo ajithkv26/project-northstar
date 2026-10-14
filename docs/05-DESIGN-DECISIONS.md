@@ -49,3 +49,15 @@ Connect one host's GitHub app to `ajithkv26/project-northstar`. Do not add a tok
 | Vercel | Add New, Project, import this repository. Framework preset Other. No environment variables. | `npm run build` | `dist` | Install command `npm ci`. |
 
 Each app comments the preview URL on the pull request. Connecting more than one adds more than one comment.
+
+### DD-003: The homepage uses the supplied copy, asks included
+- Date: 2026-10-14
+- Decision: `site/index.html` is the homepage. The visible words are the supplied intro, two stories, the thinking section, and the background. Each `[ASK: ...]` is a `<mark>` with a dashed hairline in `--north-border`, so the gap stays on the page. The build copies root `tokens.css` and `fonts/` into `dist/` with the page. `site/tokens.css` is removed. The specimen at the repository root stays the reading test.
+- Context: Foundations landed in pull request 2. The scaffold page still said "In progress".
+- Options considered:
+  1. Show the ask text in the layout.
+  2. Hide the asks until the sentences exist.
+  3. Write the missing sentences.
+- Trade-offs: The page is unfinished on purpose. Hiding an ask would make a gap look like a finished paragraph. Writing the sentences would put words in Ajith's mouth. The mark's thickness is 1px, the hairline from foundations DD-013, because border width is not a token. Headings stay at weight 400, from foundations DD-001, because the file has one roman.
+- Serves (understand / maintain / memorable), and how we'd know: Understand, because the structure and the missing sentences are both readable. Maintain, because the page uses the foundation tokens and the check compares the visible text with this copy. We'd know when that comparison passes.
+- Docs updated: this file, docs/06-BACKLOG.md, docs/07-RELEASE-NOTES.md.

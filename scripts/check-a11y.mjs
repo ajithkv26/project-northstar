@@ -9,7 +9,7 @@ import axe from 'axe-core';
 const root = join(import.meta.dirname, '..');
 const dist = join(root, 'dist');
 const entry = join(dist, 'index.html');
-const expectedText = 'Ajith Kumar In progress';
+const expectedText = 'Intro Ajith Kumar. Product designer. [ASK: one plain sentence on what you do now, in the words you\'d use with a friend.] Stories behind the product Dell CMS: I had to argue for a modern approach against "this is a legacy system and it works". What shipped cut publishing time by 90%. What I wanted was live preview and inline editing. [ASK: why shipping first was right] Gelato: 78% and 90% faster onboarding. I\'m proud of the approach, not the UI. [ASK: what the approach was] How I think about products What are you solving, why, and what\'s the lowest-hanging fruit? Long-term thinking about saving cost. [ASK: one real example] Background Maths degree. Graphic design since 2004.';
 
 if (!existsSync(entry)) {
   console.error('dist/index.html is missing. Run npm run build first.');

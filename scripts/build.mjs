@@ -7,4 +7,6 @@ const dist = join(root, 'dist');
 
 await rm(dist, { recursive: true, force: true });
 await cp(source, dist, { recursive: true });
-console.log('Built site/ to dist/.');
+await cp(join(root, 'tokens.css'), join(dist, 'tokens.css'));
+await cp(join(root, 'fonts'), join(dist, 'fonts'), { recursive: true });
+console.log('Built site/ to dist/, with foundation tokens and fonts.');

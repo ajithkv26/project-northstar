@@ -1,19 +1,90 @@
 /*
- * Uses token slots only. Heading sizes stay with the user agent
- * until a ratio-based type scale exists.
+ * Homepage layout. Colour, type, space, and the grid come from tokens.css.
+ * The 1px outline is the hairline in foundations DD-013. Thickness is not a token.
  */
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--north-surface);
+  color: var(--north-foreground);
+}
+
 body {
-  margin: var(--space-page);
-  background-color: var(--color-surface);
-  color: var(--color-foreground);
-  font-family: var(--font-family);
-  font-size: var(--type-body);
-  line-height: var(--type-leading);
+  display: grid;
+  grid-template-columns: repeat(var(--north-grid-columns), minmax(0, 1fr));
+  column-gap: var(--north-space-stack);
+  max-width: calc(var(--north-measure) + 2 * var(--north-space-stack));
+  margin: 0 auto;
+  padding-block: var(--north-space-section);
+  padding-inline: var(--north-space-stack);
+  background: var(--north-surface);
+  color: var(--north-foreground);
+  font-family: var(--north-font);
+  font-size: var(--north-size-body);
+  font-weight: 400; /* break: DD-001 */
+  font-synthesis: none;
+  line-height: var(--north-leading);
+}
+
+body > * {
+  grid-column: 1 / -1;
+}
+
+h1,
+h2 {
+  margin: 0 0 var(--north-space-tight);
+  font-family: var(--north-font);
+  font-weight: 400; /* break: DD-001 */
+  line-height: var(--north-leading);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--north-size-title);
+}
+
+h2 {
+  font-size: var(--north-size-heading);
+}
+
+p,
+ol {
+  margin: 0;
+}
+
+p + p,
+li + li {
+  margin-top: var(--north-space-stack);
+}
+
+ol {
+  padding-inline-start: var(--north-space-section);
 }
 
 main {
-  display: grid;
-  grid-template-columns: var(--grid-template-columns);
-  column-gap: var(--grid-gutter);
+  margin-top: var(--north-space-section);
+}
+
+section + section {
+  margin-top: var(--north-space-section);
+}
+
+p,
+li {
+  hyphens: auto;
+}
+
+mark {
+  display: inline-block;
+  max-width: 100%;
+  margin-block-start: var(--north-space-tight);
+  background: var(--north-surface);
+  color: var(--north-foreground);
+  border: 1px dashed var(--north-border); /* break: DD-013 */
+  padding: var(--north-space-tight);
 }
