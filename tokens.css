@@ -1,0 +1,45 @@
+/* Project Northstar foundations.
+   Custom properties for Sprint 0. Each property cites an entry in
+   05-DESIGN-DECISIONS.md. This file is the source of truth.
+   There is no Figma file behind these values. */
+
+@font-face {
+  font-family: "Source Serif 4"; /* DD-001 */
+  src: url("fonts/SourceSerif4-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+
+  --north-font: "Source Serif 4", "Iowan Old Style", Palatino, "Palatino Linotype", "Book Antiqua", serif; /* DD-001 */
+  --north-ratio: 1.414213562; /* DD-002 */
+  --north-size-body: 1.125rem; /* DD-003 */
+  --north-size-note: calc(var(--north-size-body) / var(--north-ratio)); /* DD-004 */
+  --north-size-heading: calc(var(--north-size-body) * var(--north-ratio)); /* DD-005 */
+  --north-size-title: calc(var(--north-size-heading) * var(--north-ratio)); /* DD-006 */
+  --north-leading: 1.5; /* DD-007 */
+
+  --north-space-tight: var(--north-size-note); /* DD-008 */
+  --north-space-stack: var(--north-size-body); /* DD-009 */
+  --north-space-section: var(--north-size-title); /* DD-010 */
+
+  --north-surface: #E6F0F1; /* DD-011 */
+  --north-foreground: #0E2428; /* DD-012 */
+  --north-border: #758384; /* DD-013 */
+
+  --north-measure: 60ch; /* DD-014 */
+  --north-grid-columns: 4; /* DD-015 */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --north-surface: #1A3C44; /* DD-011 */
+    --north-foreground: #D7EBEC; /* DD-012 */
+    --north-border: #798D93; /* DD-013 */
+  }
+}

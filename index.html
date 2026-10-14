@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ajith Kumar</title>
+    <link rel="stylesheet" href="tokens.css">
+    <style>
+      /* Specimen layout. Colour, type, space, and the grid come from tokens.css. */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--north-surface);
+        color: var(--north-foreground);
+      }
+
+      body {
+        margin: 0;
+        background: var(--north-surface);
+        font-family: var(--north-font);
+        font-size: var(--north-size-body);
+        font-weight: 400;
+        font-synthesis: none;
+        line-height: var(--north-leading);
+      }
+
+      .page {
+        display: grid;
+        grid-template-columns: repeat(var(--north-grid-columns), minmax(0, 1fr));
+        column-gap: var(--north-space-stack);
+        max-width: calc(var(--north-measure) + 2 * var(--north-space-stack));
+        margin-inline: auto;
+        padding-block: var(--north-space-section);
+        padding-inline: var(--north-space-stack);
+      }
+
+      .page > * {
+        grid-column: 1 / -1;
+      }
+
+      .note {
+        margin: 0;
+        color: var(--north-foreground);
+        font-size: var(--north-size-note);
+      }
+
+      h1,
+      h2 {
+        font-family: var(--north-font);
+        font-weight: 400;
+        line-height: var(--north-leading);
+        text-wrap: balance;
+      }
+
+      h1 {
+        margin: var(--north-space-tight) 0 0;
+        font-size: var(--north-size-title);
+      }
+
+      h2 {
+        margin: 0 0 var(--north-space-tight);
+        font-size: var(--north-size-heading);
+      }
+
+      header {
+        margin-bottom: var(--north-space-section);
+        padding-bottom: var(--north-space-tight);
+        border-bottom: 1px solid var(--north-border);
+      }
+
+      p {
+        margin: 0;
+        hyphens: auto;
+      }
+
+      p + p {
+        margin-top: var(--north-space-stack);
+      }
+
+      section + section,
+      footer {
+        margin-top: var(--north-space-section);
+      }
+
+      footer {
+        padding-top: var(--north-space-tight);
+        border-top: 1px solid var(--north-border);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <p class="note">Product design</p>
+        <h1>Ajith Kumar</h1>
+      </header>
+
+      <section>
+        <h2>The column</h2>
+        <p>This is the Sprint 0 reading test. Body text is Source Serif 4 at the body step, with a line height of 1.5. On a wide screen a full line is about 66 to 70 letters. On a phone the column is the screen width minus the inset, and the type size stays where it is.</p>
+        <p>The gap under this paragraph is the stack space. That interval is the body step. The page uses it again for the inset and for the gutter of the grid.</p>
+      </section>
+
+      <section>
+        <h2>The grid</h2>
+        <p>The page is four columns, and this text spans all of them. A later case study can put a figure on two columns and a caption on the other two. The gutter is the same stack space, so the grid does not add a second interval.</p>
+      </section>
+
+      <footer>
+        <p class="note">Source Serif 4. Ratio &#8730;2. Base 18px.</p>
+      </footer>
+    </main>
+  </body>
+</html>
