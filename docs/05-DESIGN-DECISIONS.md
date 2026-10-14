@@ -61,3 +61,15 @@ Each app comments the preview URL on the pull request. Connecting more than one 
 - Trade-offs: The page is unfinished on purpose. Hiding an ask would make a gap look like a finished paragraph. Writing the sentences would put words in Ajith's mouth. The mark's thickness is 1px, the hairline from foundations DD-013, because border width is not a token. Headings stay at weight 400, from foundations DD-001, because the file has one roman.
 - Serves (understand / maintain / memorable), and how we'd know: Understand, because the structure and the missing sentences are both readable. Maintain, because the page uses the foundation tokens and the check compares the visible text with this copy. We'd know when that comparison passes.
 - Docs updated: this file, docs/06-BACKLOG.md, docs/07-RELEASE-NOTES.md.
+
+### DD-004: The homepage uses the STE rewrite
+- Date: 2026-10-14
+- Decision: The visible words in `site/index.html` are the STE rewrite. Each `[ASK: ...]` stays a `<mark>` with the dashed hairline. No other sentences were added.
+- Context: The first homepage used an earlier draft of the same stories.
+- Options considered:
+  1. Replace the sentences with the STE draft.
+  2. Keep the first draft.
+  3. Fill the asks.
+- Trade-offs: The asks stay open. The check compares the visible text with this draft.
+- Serves (understand / maintain / memorable), and how we'd know: Understand, because the page says what the draft says. We'd know when `npm run check` passes.
+- Docs updated: this file, docs/06-BACKLOG.md, docs/07-RELEASE-NOTES.md.

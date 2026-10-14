@@ -9,7 +9,7 @@ import axe from 'axe-core';
 const root = join(import.meta.dirname, '..');
 const dist = join(root, 'dist');
 const entry = join(dist, 'index.html');
-const expectedText = 'Intro Ajith Kumar. Product designer. [ASK: one plain sentence on what you do now, in the words you\'d use with a friend.] Stories behind the product Dell CMS: I had to argue for a modern approach against "this is a legacy system and it works". What shipped cut publishing time by 90%. What I wanted was live preview and inline editing. [ASK: why shipping first was right] Gelato: 78% and 90% faster onboarding. I\'m proud of the approach, not the UI. [ASK: what the approach was] How I think about products What are you solving, why, and what\'s the lowest-hanging fruit? Long-term thinking about saving cost. [ASK: one real example] Background Maths degree. Graphic design since 2004.';
+const expectedText = 'Intro Ajith Kumar. Product designer. [ASK: one sentence on what you do now.] Stories behind the product Dell CMS. The team said: "This is a legacy system and it works." I pushed for a modern approach. I designed within the limits of the legacy systems. Publishing time went down by 90%. I wanted more: live preview and inline editing. [ASK: why was it right to ship this version first?] Gelato. Onboarding got 78% and 90% faster. I am proud of the approach, not the UI. [ASK: what was the approach?] How I think about products I ask three questions. What are you solving? Why? What is the lowest-hanging fruit? I think long term, to save cost. [ASK: one real example.] Background Maths degree. Graphic design since 2004.';
 
 if (!existsSync(entry)) {
   console.error('dist/index.html is missing. Run npm run build first.');
