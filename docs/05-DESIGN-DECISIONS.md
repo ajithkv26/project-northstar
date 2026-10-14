@@ -62,7 +62,19 @@ Each app comments the preview URL on the pull request. Connecting more than one 
 - Serves (understand / maintain / memorable), and how we'd know: Understand, because the structure and the missing sentences are both readable. Maintain, because the page uses the foundation tokens and the check compares the visible text with this copy. We'd know when that comparison passes.
 - Docs updated: this file, docs/06-BACKLOG.md, docs/07-RELEASE-NOTES.md.
 
-### DD-004: The homepage uses the STE rewrite
+### DD-004: Pull requests lint prose
+- Date: 2026-10-14
+- Decision: Pull requests run Vale 3.24.0. A sentence may use 25 words. A be-verb plus a participle is passive voice. A semicolon marks two ideas. A comma before a coordinating conjunction marks two ideas. Banned words live in `.vale/styles/Northstar/Banned.yml`. Files in `docs/` fail the job. UI labels fail the job. Homepage story copy warns only.
+- Context: ASD-STE100 asks for short active sentences. ASD-STE100 asks for one idea in a sentence. The published word list stays out of this repo. The publisher holds that copyright. These checks are local heuristics.
+- Options considered:
+  1. Local Vale rules and one word list.
+  2. A vendored STE dictionary.
+  3. A third-party style package.
+- Trade-offs: The passive check misses a participle after extra words. The passive check flags some adjectives that end in ed. The one-idea check misses a bare and. Warnings leave the homepage voice alone. The job skips script tags. The job skips style tags. The job skips pre tags. The job skips code.
+- Serves: maintain. How we'd know: the prose job lists each finding. The job fails only on errors.
+- Docs updated: this file, docs/06-BACKLOG.md, docs/07-RELEASE-NOTES.md.
+
+### DD-005: The homepage uses the STE rewrite
 - Date: 2026-10-14
 - Decision: The visible words in `site/index.html` are the STE rewrite. Each `[ASK: ...]` stays a `<mark>` with the dashed hairline. No other sentences were added.
 - Context: The first homepage used an earlier draft of the same stories.
@@ -71,5 +83,5 @@ Each app comments the preview URL on the pull request. Connecting more than one 
   2. Keep the first draft.
   3. Fill the asks.
 - Trade-offs: The asks stay open. The check compares the visible text with this draft.
-- Serves (understand / maintain / memorable), and how we'd know: Understand, because the page says what the draft says. We'd know when `npm run check` passes.
+- Serves: understand. How we'd know: the page says what the draft says. The check passes.
 - Docs updated: this file, docs/06-BACKLOG.md, docs/07-RELEASE-NOTES.md.

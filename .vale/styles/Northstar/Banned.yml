@@ -1,0 +1,16 @@
+# The only banned-word list. Add one word per entry.
+extends: existence
+message: "Do not use '%s'."
+ignorecase: true
+level: error
+tokens:
+  - seamless
+  - leverage
+  - robust
+  - delve
+  - elevate
+  - empower
+  - cutting-edge
+  - unlock
+  - journey
+  - synergy
