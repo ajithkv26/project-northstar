@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
+import { createServer as createNetServer } from 'node:net';
 import { existsSync, readFileSync } from 'node:fs';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -77,28 +78,62 @@ await new Promise((resolve) => {
 });
 const { port } = server.address();
 
-const userDataDir = await mkdtemp(join(tmpdir(), 'northstar-chrome-'));
-const chrome = spawn(chromePath, [
-  '--headless=new',
-  '--disable-gpu',
-  '--no-sandbox',
-  '--disable-dev-shm-usage',
-  '--remote-debugging-port=0',
-  `--user-data-dir=${userDataDir}`,
-], { detached: true, stdio: ['ignore', 'ignore', 'pipe'] });
-
-let stderr = '';
-chrome.stderr.on('data', (chunk) => {
-  stderr += chunk.toString();
-});
+let chrome;
+let userDataDir;
 
 function stopChrome() {
-  if (!chrome.pid) return;
+  if (!chrome?.pid) return;
   try {
     process.kill(-chrome.pid, 'SIGKILL');
   } catch {
     chrome.kill('SIGKILL');
   }
+  chrome = undefined;
+}
+
+function reservePort() {
+  return new Promise((resolve, reject) => {
+    const probe = createNetServer();
+    probe.once('error', reject);
+    probe.listen(0, '127.0.0.1', () => {
+      const { port: debugPort } = probe.address();
+      probe.close((error) => {
+        if (error) reject(error);
+        else resolve(debugPort);
+      });
+    });
+  });
+}
+
+function launchChrome(debugPort, dataDir) {
+  let output = '';
+  const env = { ...process.env };
+  // GitHub runners set a D-Bus address Chrome 155 cannot parse. It then
+  // stalls before the DevTools port opens.
+  delete env.DBUS_SESSION_BUS_ADDRESS;
+  const child = spawn(chromePath, [
+    '--headless=new',
+    '--disable-gpu',
+    '--no-sandbox',
+    '--disable-dev-shm-usage',
+    `--remote-debugging-port=${debugPort}`,
+    '--remote-debugging-address=127.0.0.1',
+    '--remote-allow-origins=*',
+    `--user-data-dir=${dataDir}`,
+    '--no-first-run',
+    '--no-default-browser-check',
+  ], {
+    detached: true,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    env,
+  });
+  const collect = (chunk) => {
+    output += chunk.toString();
+  };
+  child.stdout.on('data', collect);
+  child.stderr.on('data', collect);
+  chrome = child;
+  return () => output;
 }
 
 const timeout = setTimeout(() => {
@@ -106,27 +141,56 @@ const timeout = setTimeout(() => {
   stopChrome();
   server.close();
   process.exit(1);
-}, 30000);
+}, 120000);
 
-async function devtoolsUrl() {
+async function devtoolsUrl(debugPort, output, deadlineMs) {
   const started = Date.now();
-  while (Date.now() - started < 10000) {
-    const match = stderr.match(/DevTools listening on (ws:\/\/\S+)/);
+  let logged = '';
+  while (Date.now() - started < deadlineMs) {
+    logged = output();
+    const match = logged.match(/DevTools listening on (ws:\/\/\S+)/);
     if (match) return match[1];
     try {
-      const portFile = await readFile(join(userDataDir, 'DevToolsActivePort'), 'utf8');
-      const debugPort = portFile.split('\n')[0].trim();
-      if (debugPort) {
-        const version = await fetch(`http://127.0.0.1:${debugPort}/json/version`);
+      const version = await fetch(`http://127.0.0.1:${debugPort}/json/version`);
+      if (version.ok) {
         const body = await version.json();
         if (body.webSocketDebuggerUrl) return body.webSocketDebuggerUrl;
       }
     } catch {
       // Chrome is still starting.
     }
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    try {
+      const portFile = await readFile(join(userDataDir, 'DevToolsActivePort'), 'utf8');
+      const [filePort, filePath] = portFile.split('\n');
+      if (filePort?.trim() && filePath?.trim()) {
+        return `ws://127.0.0.1:${filePort.trim()}${filePath.trim()}`;
+      }
+    } catch {
+      // The port file appears after the browser is ready.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 200));
   }
-  throw new Error(`Chrome did not open a DevTools port.\n${stderr}`);
+  const error = new Error(`Chrome did not open a DevTools port.\n${logged}`);
+  error.logged = logged;
+  throw error;
+}
+
+async function startChrome() {
+  let lastLog = '';
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    if (userDataDir) await rm(userDataDir, { recursive: true, force: true });
+    userDataDir = await mkdtemp(join(tmpdir(), 'northstar-chrome-'));
+    const debugPort = await reservePort();
+    const output = launchChrome(debugPort, userDataDir);
+    try {
+      return await devtoolsUrl(debugPort, output, 20000);
+    } catch (error) {
+      lastLog = error.logged ?? output();
+      stopChrome();
+      if (attempt === 2) break;
+    }
+  }
+  throw new Error(`Chrome did not open a DevTools port.\n${lastLog}`);
 }
 
 function connect(url) {
@@ -166,7 +230,7 @@ function connect(url) {
 let failed = false;
 
 try {
-  const browserUrl = await devtoolsUrl();
+  const browserUrl = await startChrome();
   const devtools = connect(browserUrl);
   await devtools.opened;
 
@@ -279,7 +343,7 @@ try {
   clearTimeout(timeout);
   stopChrome();
   await new Promise((resolve) => server.close(resolve));
-  await rm(userDataDir, { recursive: true, force: true });
+  if (userDataDir) await rm(userDataDir, { recursive: true, force: true });
 }
 
 if (process.exitCode) process.exit(process.exitCode);

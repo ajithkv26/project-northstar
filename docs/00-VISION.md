@@ -17,4 +17,4 @@ Design Directors, Heads of Design, product leaders.
 Reduce complexity. Create clarity. Design for change. Prefer timeless solutions over trends. Think long-term. Prioritise accessibility. Use restraint instead of decoration. Every decision has a reason.
 
 ## Success
-_To be written after discovery. Draft exit criterion: a Head of Design can say what makes Ajith different after a two-minute skim on a phone._
+_We will write this after discovery. Draft exit criterion: a Head of Design can say what makes Ajith different after a two-minute skim on a phone._
