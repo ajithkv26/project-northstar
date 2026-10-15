@@ -97,3 +97,14 @@ Each app comments the preview URL on the pull request. Connecting more than one 
 - Trade-offs: The nav stays visible on a narrow screen. I removed story links with no target. Asks stay on the page as marks.
 - Serves: understand. How we'd know: the check passes. The nav links open real sections.
 - Docs updated: this file, docs/06-BACKLOG.md, docs/07-RELEASE-NOTES.md.
+
+### DD-007: The check waits for Chrome on an explicit port
+- Date: 2026-10-15
+- Decision: The check starts Chrome with an explicit debugging port. It reads stdout and stderr. It waits 20 seconds and retries once. It drops the runner D-Bus address.
+- Context: After pull request 5, GitHub's Chrome 155 did not open a DevTools port within 10 seconds. The script diff in that pull request is empty. The only Chrome log was a D-Bus address it could not parse. A later run on Chrome 154 failed the same way with an empty log.
+- Options considered:
+  1. Wait longer on an explicit port and retry once.
+  2. Switch the check to a bundled browser.
+- Trade-offs: The check can take longer on a slow runner. It still uses the runner's Chrome.
+- Serves: maintain. How we'd know: the build and check job passes on this branch.
+- Docs updated: this file and docs/07-RELEASE-NOTES.md.

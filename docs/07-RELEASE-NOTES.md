@@ -11,3 +11,4 @@
 - Banned words live in one file.
 - Homepage sentences replaced with the STE rewrite. Asks stay visible marks.
 - Homepage follows the v0.2 structure with foundation tokens. Asks stay visible marks.
+- The accessibility check waits for Chrome on an explicit port and retries.
