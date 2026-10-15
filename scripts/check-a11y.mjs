@@ -1,5 +1,6 @@
 import { spawn } from 'node:child_process';
 import { createServer } from 'node:http';
+import { createServer as createNetServer } from 'node:net';
 import { existsSync, readFileSync } from 'node:fs';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -9,7 +10,7 @@ import axe from 'axe-core';
 const root = join(import.meta.dirname, '..');
 const dist = join(root, 'dist');
 const entry = join(dist, 'index.html');
-const expectedText = 'Intro Ajith Kumar. Product designer. [ASK: one plain sentence on what you do now, in the words you\'d use with a friend.] Stories behind the product Dell CMS: I had to argue for a modern approach against "this is a legacy system and it works". What shipped cut publishing time by 90%. What I wanted was live preview and inline editing. [ASK: why shipping first was right] Gelato: 78% and 90% faster onboarding. I\'m proud of the approach, not the UI. [ASK: what the approach was] How I think about products What are you solving, why, and what\'s the lowest-hanging fruit? Long-term thinking about saving cost. [ASK: one real example] Background Maths degree. Graphic design since 2004.';
+const expectedText = 'AJ Work Thinking Stories Notes I make complex products easier to build, use and evolve. Over the last decade I\'ve worked on enterprise platforms, internal tools and data-heavy products. I enjoy understanding how people work. I question assumptions. I design systems that make complex software feel simple. [ASK: one sentence on what you do now.] Explore My Work Good products aren\'t simple. They just feel simple. Stories Behind the Product How do you help hundreds of production partners work together without making the platform harder to use? Gelato I built internal platforms, workflows and design systems. They scaled with the business. They did not fight it. Onboarding got 78% and 90% faster. I am proud of the approach, not the UI. [ASK: what was the approach?] How do you help enterprise teams publish faster without sacrificing consistency? Dell I redesigned a complex publishing workflow. The change cut publishing time by 90%. [ASK: why was it right to ship this version first?] How do you make thousands of railway sensor readings understandable in seconds? CEMIT I design products that turn operational data into decisions people can trust. Things I Notice Users have to remember instead of recognize. Different teams solve the same problem differently. Teams add features. They do not question the underlying problem. People slowly accept complexity as "normal". Thinking I think long term, to save cost. [ASK: one real example.] Consistency isn\'t about making everything look the same. It\'s about making decisions predictable. Let\'s build better products. You are building software that gets harder to use as it grows. I\'d love to talk.';
 
 if (!existsSync(entry)) {
   console.error('dist/index.html is missing. Run npm run build first.');
@@ -77,28 +78,62 @@ await new Promise((resolve) => {
 });
 const { port } = server.address();
 
-const userDataDir = await mkdtemp(join(tmpdir(), 'northstar-chrome-'));
-const chrome = spawn(chromePath, [
-  '--headless=new',
-  '--disable-gpu',
-  '--no-sandbox',
-  '--disable-dev-shm-usage',
-  '--remote-debugging-port=0',
-  `--user-data-dir=${userDataDir}`,
-], { detached: true, stdio: ['ignore', 'ignore', 'pipe'] });
-
-let stderr = '';
-chrome.stderr.on('data', (chunk) => {
-  stderr += chunk.toString();
-});
+let chrome;
+let userDataDir;
 
 function stopChrome() {
-  if (!chrome.pid) return;
+  if (!chrome?.pid) return;
   try {
     process.kill(-chrome.pid, 'SIGKILL');
   } catch {
     chrome.kill('SIGKILL');
   }
+  chrome = undefined;
+}
+
+function reservePort() {
+  return new Promise((resolve, reject) => {
+    const probe = createNetServer();
+    probe.once('error', reject);
+    probe.listen(0, '127.0.0.1', () => {
+      const { port: debugPort } = probe.address();
+      probe.close((error) => {
+        if (error) reject(error);
+        else resolve(debugPort);
+      });
+    });
+  });
+}
+
+function launchChrome(debugPort, dataDir) {
+  let output = '';
+  const env = { ...process.env };
+  // GitHub runners set a D-Bus address Chrome 155 cannot parse. It then
+  // stalls before the DevTools port opens.
+  delete env.DBUS_SESSION_BUS_ADDRESS;
+  const child = spawn(chromePath, [
+    '--headless=new',
+    '--disable-gpu',
+    '--no-sandbox',
+    '--disable-dev-shm-usage',
+    `--remote-debugging-port=${debugPort}`,
+    '--remote-debugging-address=127.0.0.1',
+    '--remote-allow-origins=*',
+    `--user-data-dir=${dataDir}`,
+    '--no-first-run',
+    '--no-default-browser-check',
+  ], {
+    detached: true,
+    stdio: ['ignore', 'pipe', 'pipe'],
+    env,
+  });
+  const collect = (chunk) => {
+    output += chunk.toString();
+  };
+  child.stdout.on('data', collect);
+  child.stderr.on('data', collect);
+  chrome = child;
+  return () => output;
 }
 
 const timeout = setTimeout(() => {
@@ -106,27 +141,56 @@ const timeout = setTimeout(() => {
   stopChrome();
   server.close();
   process.exit(1);
-}, 30000);
+}, 120000);
 
-async function devtoolsUrl() {
+async function devtoolsUrl(debugPort, output, deadlineMs) {
   const started = Date.now();
-  while (Date.now() - started < 10000) {
-    const match = stderr.match(/DevTools listening on (ws:\/\/\S+)/);
+  let logged = '';
+  while (Date.now() - started < deadlineMs) {
+    logged = output();
+    const match = logged.match(/DevTools listening on (ws:\/\/\S+)/);
     if (match) return match[1];
     try {
-      const portFile = await readFile(join(userDataDir, 'DevToolsActivePort'), 'utf8');
-      const debugPort = portFile.split('\n')[0].trim();
-      if (debugPort) {
-        const version = await fetch(`http://127.0.0.1:${debugPort}/json/version`);
+      const version = await fetch(`http://127.0.0.1:${debugPort}/json/version`);
+      if (version.ok) {
         const body = await version.json();
         if (body.webSocketDebuggerUrl) return body.webSocketDebuggerUrl;
       }
     } catch {
       // Chrome is still starting.
     }
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    try {
+      const portFile = await readFile(join(userDataDir, 'DevToolsActivePort'), 'utf8');
+      const [filePort, filePath] = portFile.split('\n');
+      if (filePort?.trim() && filePath?.trim()) {
+        return `ws://127.0.0.1:${filePort.trim()}${filePath.trim()}`;
+      }
+    } catch {
+      // The port file appears after the browser is ready.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 200));
   }
-  throw new Error(`Chrome did not open a DevTools port.\n${stderr}`);
+  const error = new Error(`Chrome did not open a DevTools port.\n${logged}`);
+  error.logged = logged;
+  throw error;
+}
+
+async function startChrome() {
+  let lastLog = '';
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    if (userDataDir) await rm(userDataDir, { recursive: true, force: true });
+    userDataDir = await mkdtemp(join(tmpdir(), 'northstar-chrome-'));
+    const debugPort = await reservePort();
+    const output = launchChrome(debugPort, userDataDir);
+    try {
+      return await devtoolsUrl(debugPort, output, 20000);
+    } catch (error) {
+      lastLog = error.logged ?? output();
+      stopChrome();
+      if (attempt === 2) break;
+    }
+  }
+  throw new Error(`Chrome did not open a DevTools port.\n${lastLog}`);
 }
 
 function connect(url) {
@@ -166,7 +230,7 @@ function connect(url) {
 let failed = false;
 
 try {
-  const browserUrl = await devtoolsUrl();
+  const browserUrl = await startChrome();
   const devtools = connect(browserUrl);
   await devtools.opened;
 
@@ -279,7 +343,7 @@ try {
   clearTimeout(timeout);
   stopChrome();
   await new Promise((resolve) => server.close(resolve));
-  await rm(userDataDir, { recursive: true, force: true });
+  if (userDataDir) await rm(userDataDir, { recursive: true, force: true });
 }
 
 if (process.exitCode) process.exit(process.exitCode);
