@@ -20,4 +20,4 @@
 - Start discovery sessions in Sprint 0.
 
 ## Definition of done
-_To be agreed._
+_The team will agree this._

@@ -1,6 +1,6 @@
 # Content Strategy
 
-_To be shaped by discovery (see 08-OBSERVATIONS.md). No generic portfolio content._
+_Discovery will shape this (see 08-OBSERVATIONS.md). No generic portfolio content._
 
 ## Writing rules
 - No generic UX language or buzzwords.

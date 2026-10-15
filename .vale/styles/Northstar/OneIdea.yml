@@ -1,0 +1,9 @@
+extends: existence
+message: "Keep one idea in this sentence."
+ignorecase: true
+level: error
+scope: sentence
+nonword: true
+tokens:
+  - ';'
+  - ',\s+(?:and|but|or|so|yet)\b'

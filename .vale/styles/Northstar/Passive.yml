@@ -1,0 +1,8 @@
+extends: existence
+message: "Use active voice. Name who does the action."
+ignorecase: true
+level: error
+scope: sentence
+nonword: true
+tokens:
+  - '\b(?:am|is|are|was|were|be|been)\b(?:\s+not)?(?:\s+being)?(?:\s+[A-Za-z]+ly)?\s+(?:\w+ed|awoken|beaten|become|begun|bent|blown|broken|brought|built|burned|burnt|caught|chosen|come|cut|dealt|done|drawn|driven|drunk|eaten|fallen|fed|felt|fought|found|frozen|given|gone|grown|heard|held|hidden|hit|hung|kept|known|laid|led|left|lent|let|lost|made|meant|met|paid|put|read|ridden|rung|said|seen|sent|set|shown|shut|sold|spent|spun|stood|stuck|taken|taught|told|thought|understood|woken|worn|written|won)\b'
